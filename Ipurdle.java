@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Ipurdle {
     public static void main(String[] args) {
@@ -84,6 +83,21 @@ public class Ipurdle {
         return clue;
     }
 
+    public static void printClue(int clue, String guess, String word){
+        clue = clueForGuessAndWord(guess, word);
+        String s = String.valueOf(clue);
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < s.length(); i ++) {
+            if (s.charAt(i) == '1') {
+                str.append(StringColouring.toColoredString(String.valueOf(guess.charAt(i )), StringColouring.BLACK));
+            } else if (s.charAt(i) == '2') {
+                str.append(StringColouring.toColoredString(String.valueOf(guess.charAt(i)), StringColouring.YELLOW));
+            } else {
+                str.append(StringColouring.toColoredString(String.valueOf(guess.charAt(i)), StringColouring.GREEN));
+            }
+        }
+    } 
+
     /**
      * Creates a numerical clue that corresponds to the guess and word input
      * 
@@ -125,22 +139,13 @@ public class Ipurdle {
      * @return number of possible valid words.
      * @requires {@code clue} be a valid clue for {@code guess}.
      */
-    public static int howManyWordsWithClue(DictionaryIP dict, int clue, String guess) {
-        
-        checkThrees(dict, guess, clue);
-        checkOnes(dict, guess, clue);
-        checkTwos(dict, guess, clue);
-        
-          
-        return dict.lenght();
-    }
-
-    private static String[] cloneDictionary(DictionaryIP dict){
-        String[] dictList = new String[dict.lenght()];
-        for (int x = 0; x<dict.lenght(); x++){
-            dictList[x] = dict.getWord(x);
-        }
-        return dictList;
+    public static int howManyWordsWithClue(DictionaryIP dict, int clue, String guess) {  
+        DictionaryIP dict2;
+        dict2 = new DictionaryIP(guess.length()); 
+        checkThrees(dict2, guess, clue);
+        checkTwos(dict2, guess, clue);
+        checkOnes(dict2, guess, clue);
+        return dict2.lenght();
     }
 
     public static void checkOnes(DictionaryIP dict, String guess, int clue) {
@@ -150,7 +155,6 @@ public class Ipurdle {
                     for (int h = 0; h < guess.length(); h++) {
                         if (checkThisLetter(guess.charAt(i), dict.getWord(l), h)) {
                             dict.selectForRemove(l);
-                            System.out.println("removed1");
                         }
                     }
                 }
@@ -158,45 +162,44 @@ public class Ipurdle {
         }
         dict.removeSelected();
     }
+    public static void playGuess(DictionaryIP dict, String guess) {
+
+    }
 
     public static void checkTwos(DictionaryIP dict, String guess, int clue) {
         for (int i = 0; i < guess.length(); i++) {
             if ((Integer.toString(clue).charAt(i))=='2') {
                 for (int k = 0; k < dict.lenght(); k++) {
-                    if (checkThisLetter(guess.charAt(i), dict.getWord(k), i)) {
+                    if (guess.charAt(i)==(dict.getWord(k)).charAt(i)) {
                         dict.selectForRemove(k);
-                        System.out.println("removed2");
-                        dict.removeSelected();
                     }
-                    int counter = 0;
-                    for (int m = 1; m <= guess.length(); m++) {
-                        counter = 0;
-                        if (checkThisLetter(guess.charAt(i), dict.getWord(0), m-1)) {
-                            counter++;
+                }
+                dict.removeSelected();
+                for (int j = 0; j < dict.lenght(); j++) {
+                    boolean hasLetter = false;
+                    for (int p = 0; p < guess.length(); p++) {
+                        if (checkThisLetter(guess.charAt(i), dict.getWord(j), p)) {
+                            hasLetter = true;
                         }
-                        if (m==guess.length() && counter==0) {
-                            dict.selectForRemove(k);
-                            System.out.println("removed2");
-                            dict.removeSelected();
-                        }
-                    }  
-                }       
-            }   
+                    }
+                    if (hasLetter==false) {
+                        dict.selectForRemove(j);
+                    }
+                }
+                dict.removeSelected();
+            }  
         }
     }
 
     public static void checkThrees(DictionaryIP dict, String guess, int clue) {
         for (int i = 0; i < guess.length(); i++) {
             if ((Integer.toString(clue).charAt(i))=='3') {
-                int j = 0; 
-                while (j < dict.lenght()) {
+                for (int j = 0; j < dict.lenght(); j++) {
                     if (checkThisLetter(guess.charAt(i), dict.getWord(j), i)==false) {
                         dict.selectForRemove(j);
-                        System.out.println("removed3");
-                        dict.removeSelected();
                     }
-                    j++;
                 }
+                dict.removeSelected();
             }
         }
     }
@@ -219,4 +222,61 @@ public class Ipurdle {
        }
        return letterInWord;
    }
+
+    // public static int betterntClueForGuess(DictionaryIP dict, String guess) {
+    //     int clueStart = minClue(guess.length());
+    //     int max = howManyWordsWithClue(dict, clueStart, guess);
+    //     int clueMax = clueStart;
+    //     int num1;
+    //     int num2;
+    //     for (int i = 1; i < dict.lenght(); i+=2) {
+    //         num1 = howManyWordsWithClue(dict, , guess);
+    //         num2 = howManyWordsWithClue(dict, , guess);
+    //         if (num1 > num2 && num1 > max) {
+    //             max = num1;
+    //             clueMax = clueForGuessAndWord(guess, dict.getWord(i));
+    //         } else if (num2 > num1 && num2 > max)  {
+    //             max = num2;
+    //             clueMax = clueForGuessAndWord(guess, dict.getWord(i-1));
+    //         }
+    //     }   
+    //     return clueMax;
+    // }
+
+    public static int betterClueForGuess(DictionaryIP dict, String guess) {
+        int clueStart = minClue(guess.length())+1;
+        int max = howManyWordsWithClue(dict, clueStart, guess);
+        int clueMax = clueStart;
+        int num1;
+        int num2;
+        while (isMaxClue(clueStart, guess.length())==false) {
+            num1 = howManyWordsWithClue(dict, clueStart, guess);
+            num2 = howManyWordsWithClue(dict, clueStart-1, guess);
+            if (num1 > num2 && num1 > max) {
+                max = num1;
+                clueMax = clueStart;
+            } else if (num2 > num1 && num2 > max)  {
+                max = num2;
+                clueMax = clueStart-1;
+            }
+            clueStart = nextClue(clueStart+1, guess.length());
+        }   
+        return clueMax;
+    }
+
+//     public static int playGuess(DictionaryIP dict, String guess){
+//         int clueForGuess = betterClueForGuess(dict, guess);
+//         for(int i = 0; i<dict.lenght(); i++){
+//             if(clueForGuessAndWord(dict.getWord(i), guess) != clueForGuess){
+//                 dict.selectForRemove(i);
+//             }
+//         }
+//         dict.removeSelected();
+//         return clueForGuess;
+//    }
+
+//     public static int playGuess(DictionaryIP dict, String guess) {
+//         howManyWordsWithClue(dict, betterClueForGuess(dict, guess), guess);
+//         return betterClueForGuess(dict, guess);
+//     }
 }

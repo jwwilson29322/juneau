@@ -31,10 +31,10 @@ public class IpurdleTest {
 		//testClueForGuessAndWord ();
 		System.out.println ();
 
-		//testHowManyWordsWithClue ();
+		testHowManyWordsWithClue ();
 		System.out.println ();
 
-		testBetterClueForGuess ();
+		//testBetterClueForGuess ();
 		System.out.println ();		
 
 		//testPlayGuess ();
@@ -289,8 +289,6 @@ public class IpurdleTest {
 					"HUMPH","FOCAL","CLUCK","CLOCK","CLICK",	// 11111
 			"TERNS"};							 		// 33333
 		DictionaryIP dictionary = new DictionaryIP (5, words);
-		DictionaryIP dictionary2 = new DictionaryIP (5, words);
-		DictionaryIP dictionary3 = new DictionaryIP (5, words);
 
 		int clue = 11211;
 		int expectedNum = 4;
@@ -303,7 +301,7 @@ public class IpurdleTest {
 
 		clue = 23211;
 		expectedNum = 3;
-		obtainedNum = Ipurdle.howManyWordsWithClue (dictionary2, clue, guess);
+		obtainedNum = Ipurdle.howManyWordsWithClue (dictionary, clue, guess);
 		if (obtainedNum != expectedNum) {
 			System.out.printf (">>> failed on  %d and %s %n", clue, guess);
 			System.out.printf (">>> expected: %d obtained: %d %n", expectedNum, obtainedNum);
@@ -312,7 +310,7 @@ public class IpurdleTest {
 
 		clue = 11111;
 		expectedNum = 5;
-		obtainedNum = Ipurdle.howManyWordsWithClue (dictionary3, clue, guess);
+		obtainedNum = Ipurdle.howManyWordsWithClue (dictionary, clue, guess);
 		if (obtainedNum != expectedNum) {
 			System.out.printf (">>> failed on  %d and %s %n", clue, guess);
 			System.out.printf (">>> expected: %d obtained: %d %n", expectedNum, obtainedNum);
@@ -321,15 +319,6 @@ public class IpurdleTest {
 
 		System.out.println (error ? "FAIL" : "PASS");	
 	}
-
-
-
-
-
-
-
-
-
 
 	private static void testBetterClueForGuess() {
 		System.out.println ("Testing betterClueForGuess ():");
@@ -345,7 +334,7 @@ public class IpurdleTest {
 		DictionaryIP dictionary = new DictionaryIP (5, words);
 
 		int expectedNum = 11111;
-		int obtainedNum = testdictionary.betterClueForGuess (dictionary, guess);
+		int obtainedNum = Ipurdle.betterClueForGuess (dictionary, guess);
 		if (obtainedNum != expectedNum) {
 			System.out.printf (">>> failed on dictionary1 %n");
 			System.out.printf (">>> expected: %d obtained: %d %n", expectedNum, obtainedNum);
@@ -361,7 +350,7 @@ public class IpurdleTest {
 		dictionary = new DictionaryIP (5, words2);
 
 		expectedNum = 11211;
-		obtainedNum = testdictionary.betterClueForGuess (dictionary, guess);
+		obtainedNum = Ipurdle.betterClueForGuess (dictionary, guess);
 		if (obtainedNum != expectedNum) {
 			System.out.printf (">>> failed on dictionary2 %n");
 			System.out.printf (">>> expected: %d obtained: %d %n", expectedNum, obtainedNum);
@@ -377,7 +366,7 @@ public class IpurdleTest {
 		dictionary = new DictionaryIP (5, words3);
 
 		expectedNum = 11111;
-		obtainedNum = testdictionary.betterClueForGuess (dictionary, guess);
+		obtainedNum = Ipurdle.betterClueForGuess (dictionary, guess);
 		if (obtainedNum != expectedNum) {
 			System.out.printf (">>> failed on dictionary2 %n");
 			System.out.printf (">>> expected: %d obtained: %d %n", expectedNum, obtainedNum);
@@ -388,20 +377,6 @@ public class IpurdleTest {
 	}
 	
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// private static void testPlayGuess() {
 	// 	System.out.println ("Testing playGuess ():");
 	// 	boolean error = false;

@@ -13,12 +13,7 @@ public class Ipurdle {
      */
     public static boolean validClue(int clue, int size) {
         int clueLength = String.valueOf(clue).length();
- 
- 
-        if (clueLength == size && clue > 0 && isTernary(clue, size)) {
-            return true;
-        } else
-        return false;
+        return clueLength == size && clue > 0 && isTernary(clue, size);
     }
  
     /**
@@ -141,7 +136,7 @@ public class Ipurdle {
         return dict2.lenght();
     }
 
-    public static void checkOnes(DictionaryIP dict, String guess, int clue) {
+    private static void checkOnes(DictionaryIP dict, String guess, int clue) {
         for (int i = 0; i < guess.length(); i++) {
             if ((Integer.toString(clue).charAt(i))=='1') {
                 for (int l = 0; l < dict.lenght(); l++) {
@@ -151,12 +146,12 @@ public class Ipurdle {
                         }
                     }
                 }
+                dict.removeSelected();
             }
         }
-        dict.removeSelected();
     }
 
-    public static void checkTwos(DictionaryIP dict, String guess, int clue) {
+    private static void checkTwos(DictionaryIP dict, String guess, int clue) {
         for (int i = 0; i < guess.length(); i++) {
             if ((Integer.toString(clue).charAt(i))=='2') {
                 for (int k = 0; k < dict.lenght(); k++) {
@@ -181,7 +176,7 @@ public class Ipurdle {
         }
     }
 
-    public static void checkThrees(DictionaryIP dict, String guess, int clue) {
+    private static void checkThrees(DictionaryIP dict, String guess, int clue) {
         for (int i = 0; i < guess.length(); i++) {
             if ((Integer.toString(clue).charAt(i))=='3') {
                 for (int j = 0; j < dict.lenght(); j++) {
@@ -203,7 +198,7 @@ public class Ipurdle {
      * @return true if {@code c} is in {@code wordToCheck} in {@code pos}.
      * @requires {@code pos} must be less than length of {@code wordToCheck}.
      */
-    public static boolean checkThisLetter(char c, String wordToCheck, int pos) {
+    private static boolean checkThisLetter(char c, String wordToCheck, int pos) {
        return wordToCheck.charAt(pos)==c;
    }
 
